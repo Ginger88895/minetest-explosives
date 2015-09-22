@@ -165,22 +165,18 @@ function boom_napalmtnt_id(pos, time, player, id)
 		
 		local storedPoses = {}
 		local dy = 0
+		local ts = tnt_range * tnt_range
 		
 		for dx=-tnt_range,tnt_range do
-			for dz=-tnt_range,tnt_range do
+			local zm=(ts-dx*dx)^(1/2.0)
+			for dz=-zm,zm do
 				local p = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
-				----------------------------------------
-				local dist = (dx^2) + (dy^2) + (dz^2)
-				dist = dist^(1/2.0)
-				if dist <= tnt_range then
-					local node = minetest.get_node(p)
-					local nodename = node.name
-					if is_tnt(nodename)==true then
-						minetest.set_node(p,{name="fire:basic_flame"})
-						boom_napalmtnt_id(p, 0.5, player, nodename) -- was {x=p.x, y=p.y, z=p.z}
-					else
-						minetest.set_node(p,{name="fire:basic_flame"})
-					end
+				local nodename = minetest.get_node(p).name
+				if is_tnt(nodename)==true then
+					minetest.set_node(p,{name="fire:basic_flame"})
+					boom_napalmtnt_id(p, 0.5, player, nodename) -- was {x=p.x, y=p.y, z=p.z}
+				else
+					minetest.set_node(p,{name="fire:basic_flame"})
 				end
 			end
 		end

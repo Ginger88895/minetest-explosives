@@ -179,33 +179,32 @@ function boom_bettertnt_id(pos, time, player, id)
 		end
 		
 		local storedPoses = {}
+		local ts = tnt_range * tnt_range
 		
 		if id~="bettertnt:tnt1" then
 			for dx=-tnt_range,tnt_range do
-				for dz=-tnt_range,tnt_range do
-					for dy=-tnt_range,tnt_range do
+				local zm=(ts-dx*dx)^(1/2.0)
+				for dz=-zm,zm do
+					local ym=(ts-dx*dx-dz*dz)^(1/2.0)
+					for dy=-ym,ym do
 						local p = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
 						----------------------------------------
-						local dist = (dx^2) + (dy^2) + (dz^2)
-						dist = dist^(1/2.0)
-						if dist <= tnt_range then
-							--local p = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
-							--vector.add(p, dir)
-							----------------------------------------
-	--							local p_node = area:index(p.x, p.y, p.z)
-	--							local d_p_node = nodes[p_node]
-							local node = minetest.get_node(p)
-							local nodename = node.name
-							if is_tnt(nodename)==true then
-								minetest.remove_node(p)
-								boom_bettertnt_id(p, 0.5, player, nodename) -- was {x=p.x, y=p.y, z=p.z}
-							elseif nodename~="air" then
-								--if math.abs(dx)<tnt_range and math.abs(dy)<tnt_range and math.abs(dz)<tnt_range then
-								minetest.remove_node(p)
-								--elseif pr:next(1,5) <= 4 then
-								--	destroy(p, player, ents)
-								--end
-							end
+						--local p = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
+						--vector.add(p, dir)
+						----------------------------------------
+--							local p_node = area:index(p.x, p.y, p.z)
+--							local d_p_node = nodes[p_node]
+						local node = minetest.get_node(p)
+						local nodename = node.name
+						if is_tnt(nodename)==true then
+							minetest.remove_node(p)
+							boom_bettertnt_id(p, 0.5, player, nodename) -- was {x=p.x, y=p.y, z=p.z}
+						elseif nodename~="air" then
+							--if math.abs(dx)<tnt_range and math.abs(dy)<tnt_range and math.abs(dz)<tnt_range then
+							minetest.remove_node(p)
+							--elseif pr:next(1,5) <= 4 then
+							--	destroy(p, player, ents)
+							--end
 						end
 					end
 				end

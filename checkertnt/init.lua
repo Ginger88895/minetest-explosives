@@ -185,6 +185,7 @@ function boom_checkertnt_id(pos, time, player, id)
 				for dz=-tnt_range,tnt_range do
 					for dy=-tnt_range,tnt_range do
 						local p = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
+						local nodename = minetest.get_node(p).name
 						if is_tnt(nodename)==true then
 							minetest.remove_node(p)
 							boom_checkertnt_id(p, 0.5, player, nodename) -- was {x=p.x, y=p.y, z=p.z}

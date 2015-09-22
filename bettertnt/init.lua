@@ -115,9 +115,9 @@ for name,data in pairs(tnt_tables) do
 	minetest.register_craft({
 		output = name,
 		recipe = {
-			{"",					"bettertnt:gunpowder",			""						},
-			{"bettertnt:gunpowder",	prev,							"bettertnt:gunpowder"	},
-			{"",					"bettertnt:gunpowder",			""						}
+			{"",prev,""},
+			{"","bettertnt:gunpowder",""},
+			{"",prev,""},
 		}
 	})
 	

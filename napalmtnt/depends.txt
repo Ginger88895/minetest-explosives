@@ -1,2 +1,3 @@
 str_helpers
 default
+fire

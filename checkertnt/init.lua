@@ -1,43 +1,43 @@
-local tnt_tables = {["napalmtnt:tnt1"] = {r=1},
-					["napalmtnt:tnt2"] = {r=2},
-					["napalmtnt:tnt3"] = {r=4},
-					["napalmtnt:tnt4"] = {r=6},
-					["napalmtnt:tnt5"] = {r=8},
-					["napalmtnt:tnt6"] = {r=10},
-					["napalmtnt:tnt7"] = {r=12},
-					["napalmtnt:tnt8"] = {r=14},
-					["napalmtnt:tnt9"] = {r=16},
-					["napalmtnt:tnt10"] = {r=18},
-					["napalmtnt:tnt11"] = {r=20},
-					["napalmtnt:tnt12"] = {r=22},
-					["napalmtnt:tnt13"] = {r=25},
-					["napalmtnt:tnt14"] = {r=30},
-					["napalmtnt:tnt15"] = {r=35},
-					["napalmtnt:tnt16"] = {r=40},
-					["napalmtnt:tnt17"] = {r=45},
-					["napalmtnt:tnt18"] = {r=50},
-					["napalmtnt:tnt19"] = {r=55},
-					["napalmtnt:tnt20"] = {r=60},
-					["napalmtnt:tnt21"] = {r=65},
-					["napalmtnt:tnt22"] = {r=70},
-					["napalmtnt:tnt23"] = {r=75},
-					["napalmtnt:tnt24"] = {r=80},
-					["napalmtnt:tnt25"] = {r=85},
-					["napalmtnt:tnt26"] = {r=90},
-					["napalmtnt:tnt27"] = {r=95},
-					["napalmtnt:tnt28"] = {r=100},
-					["napalmtnt:tnt29"] = {r=105},
-					["napalmtnt:tnt30"] = {r=110},
-					["napalmtnt:tnt31"] = {r=115},
-					["napalmtnt:tnt32"] = {r=120},
-					["napalmtnt:tnt33"] = {r=125},
-					["napalmtnt:tnt34"] = {r=130},
-					["napalmtnt:tnt35"] = {r=135},
-					["napalmtnt:tnt36"] = {r=140},
-					["napalmtnt:tnt37"] = {r=145},
-					["napalmtnt:tnt38"] = {r=150},
-					["napalmtnt:tnt39"] = {r=160},
-					["napalmtnt:tnt40"] = {r=170},
+local tnt_tables = {["checkertnt:tnt1"] = {r=1},
+					["checkertnt:tnt2"] = {r=2},
+					["checkertnt:tnt3"] = {r=4},
+					["checkertnt:tnt4"] = {r=6},
+					["checkertnt:tnt5"] = {r=8},
+					["checkertnt:tnt6"] = {r=10},
+					["checkertnt:tnt7"] = {r=12},
+					["checkertnt:tnt8"] = {r=14},
+					["checkertnt:tnt9"] = {r=16},
+					["checkertnt:tnt10"] = {r=18},
+					["checkertnt:tnt11"] = {r=20},
+					["checkertnt:tnt12"] = {r=22},
+					["checkertnt:tnt13"] = {r=25},
+					["checkertnt:tnt14"] = {r=30},
+					["checkertnt:tnt15"] = {r=35},
+					["checkertnt:tnt16"] = {r=40},
+					["checkertnt:tnt17"] = {r=45},
+					["checkertnt:tnt18"] = {r=50},
+					["checkertnt:tnt19"] = {r=55},
+					["checkertnt:tnt20"] = {r=60},
+					["checkertnt:tnt21"] = {r=65},
+					["checkertnt:tnt22"] = {r=70},
+					["checkertnt:tnt23"] = {r=75},
+					["checkertnt:tnt24"] = {r=80},
+					["checkertnt:tnt25"] = {r=85},
+					["checkertnt:tnt26"] = {r=90},
+					["checkertnt:tnt27"] = {r=95},
+					["checkertnt:tnt28"] = {r=100},
+					["checkertnt:tnt29"] = {r=105},
+					["checkertnt:tnt30"] = {r=110},
+					["checkertnt:tnt31"] = {r=115},
+					["checkertnt:tnt32"] = {r=120},
+					["checkertnt:tnt33"] = {r=125},
+					["checkertnt:tnt34"] = {r=130},
+					["checkertnt:tnt35"] = {r=135},
+					["checkertnt:tnt36"] = {r=140},
+					["checkertnt:tnt37"] = {r=145},
+					["checkertnt:tnt38"] = {r=150},
+					["checkertnt:tnt39"] = {r=160},
+					["checkertnt:tnt40"] = {r=170},
 }
 				
 
@@ -62,7 +62,7 @@ local function combine_texture(texture_size, frame_count, texture, ani_texture)
         return ani_texture.."^[combine:"..texture_size.."x"..texture_size*frame_count..":"..combine_textures.."^"..ani_texture
 end
 
-local animated_tnt_texture = combine_texture(16, 4, "default_tnt_top.png", "napalmtnt_top_burning_animated.png")
+local animated_tnt_texture = combine_texture(16, 4, "default_tnt_top.png", "checkertnt_top_burning_animated.png")
 	
 tnt_c_tnt = {}
 tnt_c_tnt_burning = {}
@@ -85,8 +85,8 @@ for name,data in pairs(tnt_tables) do
 					minetest.record_protection_violation(pos, puncher:get_player_name())
 					return
 				end
-				minetest.sound_play("napalmtnt_ignite", {pos=pos})
-				boom_napalmtnt(pos, 4, puncher)
+				minetest.sound_play("checkertnt_ignite", {pos=pos})
+				boom_checkertnt(pos, 4, puncher)
 				minetest.set_node(pos, {name=name.."_burning"})
 			end
 		end,
@@ -94,7 +94,7 @@ for name,data in pairs(tnt_tables) do
 		mesecons = {
 			effector = {
 				action_on = function(pos, node)
-					boom_napalmtnt(pos, 0)
+					boom_checkertnt(pos, 0)
 				end
 			},
 		},
@@ -108,15 +108,15 @@ for name,data in pairs(tnt_tables) do
 	        sounds = default.node_sound_wood_defaults(),
 	})
 	
-	local prev = "napalmtnt:tnt"..tonumber(strs:rem_from_start(name, "napalmtnt:tnt"))-1
-	if prev=="napalmtnt:tnt0" then prev="" end
+	local prev = "checkertnt:tnt"..tonumber(strs:rem_from_start(name, "checkertnt:tnt"))-1
+	if prev=="checkertnt:tnt0" then prev="" end
 	--print(name .. " is made from " .. prev)
 	
 	minetest.register_craft({
 		output = name,
 		recipe = {
 			{"",prev,""},
-			{"","napalmtnt:gunpowder",""},
+			{"","checkertnt:gunpowder",""},
 			{"",prev,""},
 		}
 	})
@@ -135,19 +135,19 @@ end
 
 
 
-function boom_napalmtnt(pos, time, player)
+function boom_checkertnt(pos, time, player)
 	local id = minetest.get_node(pos).name
-	boom_napalmtnt_id(pos, time, player, id)
+	boom_checkertnt_id(pos, time, player, id)
 end
 
-function boom_napalmtnt_id(pos, time, player, id)
+function boom_checkertnt_id(pos, time, player, id)
 	minetest.after(time, function(pos)
 		
 		local tnt_range = tnt_tables[id].r * 2
 	
 		local t1 = os.clock()
 		pr = get_tnt_random(pos)
-		minetest.sound_play("napalmtnt_explode", {pos=pos, gain=1.5, max_hear_distance=tnt_range*64})
+		minetest.sound_play("checkertnt_explode", {pos=pos, gain=1.5, max_hear_distance=tnt_range*64})
 		
 		minetest.remove_node(pos)
 		
@@ -160,26 +160,37 @@ function boom_napalmtnt_id(pos, time, player, id)
 --		
 --		local p_pos = area:index(pos.x, pos.y, pos.z)
 --		nodes[p_pos] = tnt_c_air
-		minetest.add_particle(pos, {x=0,y=0,z=0}, {x=0,y=0,z=0}, 0.5, 16, false, "napalmtnt_explode.png")
-		--minetest.set_node(pos, {name="tnt:boom_napalmtnt"})
+		minetest.add_particle(pos, {x=0,y=0,z=0}, {x=0,y=0,z=0}, 0.5, 16, false, "checkertnt_explode.png")
+		--minetest.set_node(pos, {name="tnt:boom_checkertnt"})
+		
+		local objects = minetest.get_objects_inside_radius(pos, tnt_range/2)
+		for _,obj in ipairs(objects) do
+			if obj:is_player() or (obj:get_luaentity() and obj:get_luaentity().name ~= "__builtin:item") then
+				local obj_p = obj:getpos()
+				local vec = {x=obj_p.x-pos.x, y=obj_p.y-pos.y, z=obj_p.z-pos.z}
+				local dist = (vec.x^2+vec.y^2+vec.z^2)^0.5
+				local damage = 0
+				if dist < tnt_range/3.0 then damage = tnt_range end
+				obj:punch(obj, 1.0, {
+					full_punch_interval=1.0,
+					damage_groups={fleshy=damage},
+				}, vec)
+			end
+		end
 		
 		local storedPoses = {}
-		local dy = 0
 		
-		for dx=-tnt_range,tnt_range do
-			for dz=-tnt_range,tnt_range do
-				local p = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
-				----------------------------------------
-				local dist = (dx^2) + (dy^2) + (dz^2)
-				dist = dist^(1/2.0)
-				if dist <= tnt_range then
-					local node = minetest.get_node(p)
-					local nodename = node.name
-					if is_tnt(nodename)==true then
-						minetest.set_node(p,{name="fire:basic_flame"})
-						boom_napalmtnt_id(p, 0.5, player, nodename) -- was {x=p.x, y=p.y, z=p.z}
-					else
-						minetest.set_node(p,{name="fire:basic_flame"})
+		if id~="checkertnt:tnt1" then
+			for dx=-tnt_range,tnt_range do
+				for dz=-tnt_range,tnt_range do
+					for dy=-tnt_range,tnt_range do
+						local p = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
+						if is_tnt(nodename)==true then
+							minetest.remove_node(p)
+							boom_checkertnt_id(p, 0.5, player, nodename) -- was {x=p.x, y=p.y, z=p.z}
+						elseif (dx+dz+dy) % 2 == 0 then
+							minetest.remove_node(p)
+						end
 					end
 				end
 			end
@@ -199,7 +210,7 @@ function boom_napalmtnt_id(pos, time, player, id)
 			8, --minsize
 			15, --maxsize
 			true, --collisiondetection
-			"napalmtnt_smoke.png" --texture
+			"checkertnt_smoke.png" --texture
 		)
 		print(string.format("[tnt] exploded in: %.2fs", os.clock() - t1))
 	end, pos)
@@ -212,20 +223,20 @@ end
 
 function burn(pos, player)
         local nodename = minetest.get_node(pos).name
-        if  strs:starts(nodename, "napalmtnt:tnt") then
-                minetest.sound_play("napalmtnt_ignite", {pos=pos})
-                boom_napalmtnt(pos, 1, player)
+        if  strs:starts(nodename, "checkertnt:tnt") then
+                minetest.sound_play("checkertnt_ignite", {pos=pos})
+                boom_checkertnt(pos, 1, player)
                 minetest.set_node(pos, {name=minetest.get_node(pos).name.."_burning"})
                 return
         end
-        if nodename ~= "napalmtnt:gunpowder" then
+        if nodename ~= "checkertnt:gunpowder" then
                 return
         end
-        minetest.sound_play("napalmtnt_gunpowder_burning", {pos=pos, gain=2})
-        minetest.set_node(pos, {name="napalmtnt:gunpowder_burning"})
+        minetest.sound_play("checkertnt_gunpowder_burning", {pos=pos, gain=2})
+        minetest.set_node(pos, {name="checkertnt:gunpowder_burning"})
         
         minetest.after(1, function(pos)
-                if minetest.get_node(pos).name ~= "napalmtnt:gunpowder_burning" then
+                if minetest.get_node(pos).name ~= "checkertnt:gunpowder_burning" then
                         return
                 end
                 minetest.after(0.5, function(pos)
@@ -258,15 +269,15 @@ function burn(pos, player)
 end
 
 
-minetest.register_node("napalmtnt:gunpowder", {
+minetest.register_node("checkertnt:gunpowder", {
         description = "Gun Powder",
         drawtype = "raillike",
         paramtype = "light",
         sunlight_propagates = true,
         walkable = false,
-        tiles = {"napalmtnt_gunpowder.png",},
-        inventory_image = "napalmtnt_gunpowder_inventory.png",
-        wield_image = "napalmtnt_gunpowder_inventory.png",
+        tiles = {"checkertnt_gunpowder.png",},
+        inventory_image = "checkertnt_gunpowder_inventory.png",
+        wield_image = "checkertnt_gunpowder_inventory.png",
         selection_box = {
                 type = "fixed",
                 fixed = {-1/2, -1/2, -1/2, 1/2, -1/2+1/16, 1/2},
@@ -281,13 +292,13 @@ minetest.register_node("napalmtnt:gunpowder", {
         end,
 })
 
-minetest.register_node("napalmtnt:gunpowder_burning", {
+minetest.register_node("checkertnt:gunpowder_burning", {
         drawtype = "raillike",
         paramtype = "light",
         sunlight_propagates = true,
         walkable = false,
         light_source = 5,
-        tiles = {{name="napalmtnt_gunpowder_burning_animated.png", animation={type="vertical_frames", aspect_w=16, aspect_h=16, length=1}}},
+        tiles = {{name="checkertnt_gunpowder_burning_animated.png", animation={type="vertical_frames", aspect_w=16, aspect_h=16, length=1}}},
         selection_box = {
                 type = "fixed",
                 fixed = {-1/2, -1/2, -1/2, 1/2, -1/2+1/16, 1/2},
@@ -297,7 +308,7 @@ minetest.register_node("napalmtnt:gunpowder_burning", {
         sounds = default.node_sound_leaves_defaults(),
 })
 
-local tnt_plus_gunpowder = {"napalmtnt:gunpowder"}
+local tnt_plus_gunpowder = {"checkertnt:gunpowder"}
 for name,data in pairs(tnt_tables) do
 	tnt_plus_gunpowder[#tnt_plus_gunpowder+1] = name
 end
@@ -310,7 +321,7 @@ minetest.register_abm({
         chance = 10,
         action = function(pos, node)
                 if tnt_tables[node.name]~=nil then
-                        boom_napalmtnt({x=pos.x, y=pos.y, z=pos.z}, 0)
+                        boom_checkertnt({x=pos.x, y=pos.y, z=pos.z}, 0)
                 else
                         burn(pos)
                 end
@@ -324,7 +335,7 @@ minetest.register_abm({
         chance = 10,
         action = function(pos, node)
                 if tnt_tables[node.name]~=nil then
-                        boom_napalmtnt({x=pos.x, y=pos.y, z=pos.z}, 0)
+                        boom_checkertnt({x=pos.x, y=pos.y, z=pos.z}, 0)
                 else
                         burn(pos)
                 end
@@ -332,9 +343,9 @@ minetest.register_abm({
 })
 
 minetest.register_craft({
-        output = "napalmtnt:gunpowder",
+        output = "checkertnt:gunpowder",
         type = "shapeless",
-        recipe = {"default:coal_lump", "default:coal_lump", "default:dirt"}
+        recipe = {"default:coal_lump", "default:gravel", "default:dirt"}
 })
 
 

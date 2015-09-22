@@ -163,21 +163,6 @@ function boom_napalmtnt_id(pos, time, player, id)
 		minetest.add_particle(pos, {x=0,y=0,z=0}, {x=0,y=0,z=0}, 0.5, 16, false, "napalmtnt_explode.png")
 		--minetest.set_node(pos, {name="tnt:boom_napalmtnt"})
 		
-		local objects = minetest.get_objects_inside_radius(pos, tnt_range/2)
-		for _,obj in ipairs(objects) do
-			if obj:is_player() or (obj:get_luaentity() and obj:get_luaentity().name ~= "__builtin:item") then
-				local obj_p = obj:getpos()
-				local vec = {x=obj_p.x-pos.x, y=obj_p.y-pos.y, z=obj_p.z-pos.z}
-				local dist = (vec.x^2+vec.y^2+vec.z^2)^0.5
-				local damage = 0
-				if dist < tnt_range/3.0 then damage = tnt_range end
-				obj:punch(obj, 1.0, {
-					full_punch_interval=1.0,
-					damage_groups={fleshy=damage},
-				}, vec)
-			end
-		end
-		
 		local storedPoses = {}
 		local dy = 0
 		

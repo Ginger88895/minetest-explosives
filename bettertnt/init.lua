@@ -135,12 +135,12 @@ end
 
 
 
-function boom(pos, time, player)
+local function boom(pos, time, player)
 	local id = minetest.get_node(pos).name
 	boom_id(pos, time, player, id)
 end
 
-function boom_id(pos, time, player, id)
+local function boom_id(pos, time, player, id)
 	minetest.after(time, function(pos)
 		
 		local tnt_range = tnt_tables[id].r * 2
@@ -238,7 +238,7 @@ end
 ---------------------  GUNPOWDER  -------------------
 
 
-function burn(pos, player)
+local function burn(pos, player)
         local nodename = minetest.get_node(pos).name
         if  strs:starts(nodename, "bettertnt:tnt") then
                 minetest.sound_play("bettertnt_ignite", {pos=pos})

@@ -183,9 +183,9 @@ function boom_bettertnt_id(pos, time, player, id)
 		
 		if id~="bettertnt:tnt1" then
 			for dx=-tnt_range,tnt_range do
-				local zm=(ts-dx*dx)^(1/2.0)
+				local zm=math.floor((ts-dx*dx)^(1/2.0))
 				for dz=-zm,zm do
-					local ym=(ts-dx*dx-dz*dz)^(1/2.0)
+					local ym=math.floor((ts-dx*dx-dz*dz)^(1/2.0))
 					for dy=-ym,ym do
 						local p = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
 						----------------------------------------

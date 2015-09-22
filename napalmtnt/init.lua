@@ -168,7 +168,7 @@ function boom_napalmtnt_id(pos, time, player, id)
 		local ts = tnt_range * tnt_range
 		
 		for dx=-tnt_range,tnt_range do
-			local zm=(ts-dx*dx)^(1/2.0)
+			local zm=math.floor((ts-dx*dx)^(1/2.0))
 			for dz=-zm,zm do
 				local p = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
 				local nodename = minetest.get_node(p).name

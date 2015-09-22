@@ -86,7 +86,7 @@ for name,data in pairs(tnt_tables) do
 					return
 				end
 				minetest.sound_play("bettertnt_ignite", {pos=pos})
-				boom(pos, 4, puncher)
+				boom_napalmtnt(pos, 4, puncher)
 				minetest.set_node(pos, {name=name.."_burning"})
 			end
 		end,
@@ -94,7 +94,7 @@ for name,data in pairs(tnt_tables) do
 		mesecons = {
 			effector = {
 				action_on = function(pos, node)
-					boom(pos, 0)
+					boom_napalmtnt(pos, 0)
 				end
 			},
 		},
@@ -135,12 +135,12 @@ end
 
 
 
-local function boom(pos, time, player)
+function boom_napalmtnt(pos, time, player)
 	local id = minetest.get_node(pos).name
-	boom_id(pos, time, player, id)
+	boom_napalmtnt_id(pos, time, player, id)
 end
 
-local function boom_id(pos, time, player, id)
+function boom_napalmtnt_id(pos, time, player, id)
 	minetest.after(time, function(pos)
 		
 		local tnt_range = tnt_tables[id].r * 2
@@ -160,8 +160,8 @@ local function boom_id(pos, time, player, id)
 --		
 --		local p_pos = area:index(pos.x, pos.y, pos.z)
 --		nodes[p_pos] = tnt_c_air
-		minetest.add_particle(pos, {x=0,y=0,z=0}, {x=0,y=0,z=0}, 0.5, 16, false, "bettertnt_boom.png")
-		--minetest.set_node(pos, {name="tnt:boom"})
+		minetest.add_particle(pos, {x=0,y=0,z=0}, {x=0,y=0,z=0}, 0.5, 16, false, "bettertnt_boom_napalmtnt.png")
+		--minetest.set_node(pos, {name="tnt:boom_napalmtnt"})
 		
 		local objects = minetest.get_objects_inside_radius(pos, tnt_range/2)
 		for _,obj in ipairs(objects) do
@@ -198,7 +198,7 @@ local function boom_id(pos, time, player, id)
 							local nodename = node.name
 							if is_tnt(nodename)==true then
 								minetest.remove_node(p)
-								boom_id(p, 0.5, player, nodename) -- was {x=p.x, y=p.y, z=p.z}
+								boom_napalmtnt_id(p, 0.5, player, nodename) -- was {x=p.x, y=p.y, z=p.z}
 							elseif nodename~="air" then
 								--if math.abs(dx)<tnt_range and math.abs(dy)<tnt_range and math.abs(dz)<tnt_range then
 								minetest.remove_node(p)
@@ -238,11 +238,11 @@ end
 ---------------------  GUNPOWDER  -------------------
 
 
-local function burn(pos, player)
+function burn(pos, player)
         local nodename = minetest.get_node(pos).name
         if  strs:starts(nodename, "bettertnt:tnt") then
                 minetest.sound_play("bettertnt_ignite", {pos=pos})
-                boom(pos, 1, player)
+                boom_napalmtnt(pos, 1, player)
                 minetest.set_node(pos, {name=minetest.get_node(pos).name.."_burning"})
                 return
         end
@@ -338,7 +338,7 @@ minetest.register_abm({
         chance = 10,
         action = function(pos, node)
                 if tnt_tables[node.name]~=nil then
-                        boom({x=pos.x, y=pos.y, z=pos.z}, 0)
+                        boom_napalmtnt({x=pos.x, y=pos.y, z=pos.z}, 0)
                 else
                         burn(pos)
                 end
@@ -352,7 +352,7 @@ minetest.register_abm({
         chance = 10,
         action = function(pos, node)
                 if tnt_tables[node.name]~=nil then
-                        boom({x=pos.x, y=pos.y, z=pos.z}, 0)
+                        boom_napalmtnt({x=pos.x, y=pos.y, z=pos.z}, 0)
                 else
                         burn(pos)
                 end

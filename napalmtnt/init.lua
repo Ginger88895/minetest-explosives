@@ -191,10 +191,10 @@ function boom_napalmtnt_id(pos, time, player, id)
 					local node = minetest.get_node(p)
 					local nodename = node.name
 					if is_tnt(nodename)==true then
-						minetest.set_node(p,"fire:basic_flame")
+						minetest.set_node(p,{name="fire:basic_flame"})
 						boom_napalmtnt_id(p, 0.5, player, nodename) -- was {x=p.x, y=p.y, z=p.z}
 					else
-						minetest.set_node(p,"fire:basic_flame")
+						minetest.set_node(p,{name="fire:basic_flame"})
 					end
 				end
 			end

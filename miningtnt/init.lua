@@ -1,23 +1,23 @@
-local tnt_tables = {["bettertnt:tnt1"] = {r=1},
-					["bettertnt:tnt2"] = {r=2},
-					["bettertnt:tnt3"] = {r=4},
-					["bettertnt:tnt4"] = {r=6},
-					["bettertnt:tnt5"] = {r=8},
-					["bettertnt:tnt6"] = {r=10},
-					["bettertnt:tnt7"] = {r=12},
-					["bettertnt:tnt8"] = {r=14},
-					["bettertnt:tnt9"] =  {r=16},
-					["bettertnt:tnt10"] = {r=18},
-					["bettertnt:tnt11"] = {r=20},
-					["bettertnt:tnt12"] = {r=22},
-					["bettertnt:tnt13"] = {r=25},
-					["bettertnt:tnt14"] = {r=30},
-					["bettertnt:tnt15"] = {r=35},
-					["bettertnt:tnt16"] = {r=40},
-					["bettertnt:tnt17"] = {r=45},
-					["bettertnt:tnt18"] = {r=50},
-					["bettertnt:tnt19"] = {r=55},
-					["bettertnt:tnt20"] = {r=60},
+local tnt_tables = {["miningtnt:tnt1"] = {r=1},
+					["miningtnt:tnt2"] = {r=2},
+					["miningtnt:tnt3"] = {r=4},
+					["miningtnt:tnt4"] = {r=6},
+					["miningtnt:tnt5"] = {r=8},
+					["miningtnt:tnt6"] = {r=10},
+					["miningtnt:tnt7"] = {r=12},
+					["miningtnt:tnt8"] = {r=14},
+					["miningtnt:tnt9"] =  {r=16},
+					["miningtnt:tnt10"] = {r=18},
+					["miningtnt:tnt11"] = {r=20},
+					["miningtnt:tnt12"] = {r=22},
+					["miningtnt:tnt13"] = {r=25},
+					["miningtnt:tnt14"] = {r=30},
+					["miningtnt:tnt15"] = {r=35},
+					["miningtnt:tnt16"] = {r=40},
+					["miningtnt:tnt17"] = {r=45},
+					["miningtnt:tnt18"] = {r=50},
+					["miningtnt:tnt19"] = {r=55},
+					["miningtnt:tnt20"] = {r=60},
 }
 				
 
@@ -42,11 +42,75 @@ local function combine_texture(texture_size, frame_count, texture, ani_texture)
         return ani_texture.."^[combine:"..texture_size.."x"..texture_size*frame_count..":"..combine_textures.."^"..ani_texture
 end
 
-local animated_tnt_texture = combine_texture(16, 4, "tnt_top.png", "bettertnt_top_burning_animated.png")
+local animated_tnt_texture = combine_texture(16, 4, "tnt_top.png", "miningtnt_top_burning_animated.png")
 	
 tnt_c_tnt = {}
 tnt_c_tnt_burning = {}
 tnt_types_int = {}
+
+function miningtnt_storage_dump(pos)
+	--Add dump
+	local meta=minetest.get_meta(pos)
+	local dumpitem=meta:get_string("dump_item")
+	local i=0
+	while true do 
+		local item=meta:get_string('item_name'..i)
+		local candump=true
+		if item=="" then
+			break
+		elseif dumpitem~="" and item~=dumpitem then
+			i=i+1
+		else
+			local num=meta:get_int('item_num'..i)
+			if num==0 then
+				i=i+1
+			else
+				local itemstack=ItemStack(item)
+				local maxstack=itemstack:get_stack_max()
+				local dropcount=math.min(num,maxstack)
+				minetest.add_item({x=pos.x,y=pos.y+1,z=pos.z},item..' '..dropcount)
+				meta:set_int('item_num'..i,num-dropcount)
+				break
+			end
+		end
+	end
+end
+
+minetest.register_node("miningtnt:storage", {
+	description = "Mining Storage",
+	tiles = {"tnt_top.png", "tnt_bottom.png", "tnt_side.png"},
+	groups = {cracky=1, level=2},
+	sounds = default.node_sound_wood_defaults(),
+	metadata_name = "generic",
+	on_construct = function(pos)
+		local meta = minetest.get_meta(pos)
+		meta:set_string("formspec","field[text;;${text}]")
+		meta:set_string("dump_item","")
+		meta:set_string("infotext","Now trying to dump some random items")
+	end,
+	on_punch = function(pos, node, puncher)
+		miningtnt_storage_dump(pos)
+	end,
+	on_receive_fields = function(pos, formname, fields, sender)
+		local meta = minetest.get_meta(pos)
+		fields.text = fields.text or ""
+		meta:set_string("dump_item", fields.text)
+		if fields.text~="" then
+			meta:set_string("infotext","Now trying to dump "..fields.text)
+		else
+			meta:set_string("infotext","Now trying to dump some random items")
+		end
+	end,
+	mesecons={
+		effector={
+			action_on=function(pos,node)
+				miningtnt_storage_dump(pos)
+			end
+		}
+	}
+})
+
+
 
 for name,data in pairs(tnt_tables) do
 	
@@ -65,8 +129,8 @@ for name,data in pairs(tnt_tables) do
 					minetest.record_protection_violation(pos, puncher:get_player_name())
 					return
 				end
-				minetest.sound_play("bettertnt_ignite", {pos=pos})
-				boom_bettertnt(pos, 4, puncher)
+				minetest.sound_play("miningtnt_ignite", {pos=pos})
+				boom_miningtnt(pos, 4, puncher)
 				minetest.set_node(pos, {name=name.."_burning"})
 			end
 		end,
@@ -74,7 +138,7 @@ for name,data in pairs(tnt_tables) do
 		mesecons = {
 			effector = {
 				action_on = function(pos, node)
-					boom_bettertnt(pos, 0)
+					boom_miningtnt(pos, 0)
 				end
 			},
 		},
@@ -88,15 +152,15 @@ for name,data in pairs(tnt_tables) do
 	        sounds = default.node_sound_wood_defaults(),
 	})
 	
-	local prev = "bettertnt:tnt"..tonumber(strs:rem_from_start(name, "bettertnt:tnt"))-1
-	if prev=="bettertnt:tnt0" then prev="" end
+	local prev = "miningtnt:tnt"..tonumber(strs:rem_from_start(name, "miningtnt:tnt"))-1
+	if prev=="miningtnt:tnt0" then prev="" end
 	--print(name .. " is made from " .. prev)
 	
 	minetest.register_craft({
 		output = name,
 		recipe = {
 			{"",prev,""},
-			{"","bettertnt:gunpowder",""},
+			{"","miningtnt:gunpowder",""},
 			{"",prev,""},
 		}
 	})
@@ -115,19 +179,19 @@ end
 
 
 
-function boom_bettertnt(pos, time, player)
+function boom_miningtnt(pos, time, player)
 	local id = minetest.get_node(pos).name
-	boom_bettertnt_id(pos, time, player, id)
+	boom_miningtnt_id(pos, time, player, id)
 end
 
-function boom_bettertnt_id(pos, time, player, id)
+function boom_miningtnt_id(pos, time, player, id)
 	minetest.after(time, function(pos)
 		
 		local tnt_range = tnt_tables[id].r * 2
 	
 		local t1 = os.clock()
 		pr = get_tnt_random(pos)
-		minetest.sound_play("bettertnt_explode", {pos=pos, gain=1.5, max_hear_distance=tnt_range*64})
+		minetest.sound_play("miningtnt_explode", {pos=pos, gain=1.5, max_hear_distance=tnt_range*64})
 		
 		minetest.remove_node(pos)
 		
@@ -140,8 +204,8 @@ function boom_bettertnt_id(pos, time, player, id)
 --		
 --		local p_pos = area:index(pos.x, pos.y, pos.z)
 --		nodes[p_pos] = tnt_c_air
-		minetest.add_particle(pos, {x=0,y=0,z=0}, {x=0,y=0,z=0}, 0.5, 16, false, "bettertnt_explode.png")
-		--minetest.set_node(pos, {name="tnt:boom_bettertnt"})
+		minetest.add_particle(pos, {x=0,y=0,z=0}, {x=0,y=0,z=0}, 0.5, 16, false, "miningtnt_explode.png")
+		--minetest.set_node(pos, {name="tnt:boom_miningtnt"})
 		
 		local objects = minetest.get_objects_inside_radius(pos, tnt_range/2)
 		for _,obj in ipairs(objects) do
@@ -160,7 +224,9 @@ function boom_bettertnt_id(pos, time, player, id)
 		
 		local storedPoses = {}
 		local ts = tnt_range * tnt_range
-		
+
+		local mined_items = {}
+
 		for dx=-tnt_range,tnt_range do
 			local zm=math.floor((ts-dx*dx)^(1/2.0))
 			for dz=-zm,zm do
@@ -175,11 +241,13 @@ function boom_bettertnt_id(pos, time, player, id)
 --							local d_p_node = nodes[p_node]
 					local node = minetest.get_node(p)
 					local nodename = node.name
-					if is_tnt(nodename)==true then
-						minetest.remove_node(p)
-						boom_bettertnt_id(p, 0.5, player, nodename) -- was {x=p.x, y=p.y, z=p.z}
-					elseif nodename~="air" then
+					if nodename~="air" then
 						--if math.abs(dx)<tnt_range and math.abs(dy)<tnt_range and math.abs(dz)<tnt_range then
+						if mined_items[nodename]==nil then
+							mined_items[nodename]=1
+						else
+							mined_items[nodename]=mined_items[nodename]+1
+						end
 						minetest.remove_node(p)
 						--elseif pr:next(1,5) <= 4 then
 						--	destroy(p, player, ents)
@@ -187,6 +255,15 @@ function boom_bettertnt_id(pos, time, player, id)
 					end
 				end
 			end
+		end
+
+		minetest.add_node({x=pos.x,y=pos.y-tnt_range,z=pos.z},{name="miningtnt:storage"})
+		local meta=minetest.get_meta({x=pos.x,y=pos.y-tnt_range,z=pos.z})
+		local i=0
+		for name in pairs(mined_items) do
+			meta:set_string("item_name"..i,name)
+			meta:set_int("item_num"..i,mined_items[name])
+			i=i+1
 		end
 		
 		minetest.add_particlespawner(
@@ -203,7 +280,7 @@ function boom_bettertnt_id(pos, time, player, id)
 			8, --minsize
 			15, --maxsize
 			true, --collisiondetection
-			"bettertnt_smoke.png" --texture
+			"miningtnt_smoke.png" --texture
 		)
 		print(string.format("[tnt] exploded in: %.2fs", os.clock() - t1))
 	end, pos)
@@ -216,20 +293,20 @@ end
 
 function burn(pos, player)
         local nodename = minetest.get_node(pos).name
-        if  strs:starts(nodename, "bettertnt:tnt") then
-                minetest.sound_play("bettertnt_ignite", {pos=pos})
-                boom_bettertnt(pos, 1, player)
+        if  strs:starts(nodename, "miningtnt:tnt") then
+                minetest.sound_play("miningtnt_ignite", {pos=pos})
+                boom_miningtnt(pos, 1, player)
                 minetest.set_node(pos, {name=minetest.get_node(pos).name.."_burning"})
                 return
         end
-        if nodename ~= "bettertnt:gunpowder" then
+        if nodename ~= "miningtnt:gunpowder" then
                 return
         end
-        minetest.sound_play("bettertnt_gunpowder_burning", {pos=pos, gain=2})
-        minetest.set_node(pos, {name="bettertnt:gunpowder_burning"})
+        minetest.sound_play("miningtnt_gunpowder_burning", {pos=pos, gain=2})
+        minetest.set_node(pos, {name="miningtnt:gunpowder_burning"})
         
         minetest.after(1, function(pos)
-                if minetest.get_node(pos).name ~= "bettertnt:gunpowder_burning" then
+                if minetest.get_node(pos).name ~= "miningtnt:gunpowder_burning" then
                         return
                 end
                 minetest.after(0.5, function(pos)
@@ -262,15 +339,15 @@ function burn(pos, player)
 end
 
 
-minetest.register_node("bettertnt:gunpowder", {
+minetest.register_node("miningtnt:gunpowder", {
         description = "Gun Powder",
         drawtype = "raillike",
         paramtype = "light",
         sunlight_propagates = true,
         walkable = false,
-        tiles = {"bettertnt_gunpowder.png",},
-        inventory_image = "bettertnt_gunpowder_inventory.png",
-        wield_image = "bettertnt_gunpowder_inventory.png",
+        tiles = {"miningtnt_gunpowder.png",},
+        inventory_image = "miningtnt_gunpowder_inventory.png",
+        wield_image = "miningtnt_gunpowder_inventory.png",
         selection_box = {
                 type = "fixed",
                 fixed = {-1/2, -1/2, -1/2, 1/2, -1/2+1/16, 1/2},
@@ -285,13 +362,13 @@ minetest.register_node("bettertnt:gunpowder", {
         end,
 })
 
-minetest.register_node("bettertnt:gunpowder_burning", {
+minetest.register_node("miningtnt:gunpowder_burning", {
         drawtype = "raillike",
         paramtype = "light",
         sunlight_propagates = true,
         walkable = false,
         light_source = 5,
-        tiles = {{name="bettertnt_gunpowder_burning_animated.png", animation={type="vertical_frames", aspect_w=16, aspect_h=16, length=1}}},
+        tiles = {{name="miningtnt_gunpowder_burning_animated.png", animation={type="vertical_frames", aspect_w=16, aspect_h=16, length=1}}},
         selection_box = {
                 type = "fixed",
                 fixed = {-1/2, -1/2, -1/2, 1/2, -1/2+1/16, 1/2},
@@ -301,7 +378,7 @@ minetest.register_node("bettertnt:gunpowder_burning", {
         sounds = default.node_sound_leaves_defaults(),
 })
 
-local tnt_plus_gunpowder = {"bettertnt:gunpowder"}
+local tnt_plus_gunpowder = {"miningtnt:gunpowder"}
 for name,data in pairs(tnt_tables) do
 	tnt_plus_gunpowder[#tnt_plus_gunpowder+1] = name
 end
@@ -314,7 +391,7 @@ minetest.register_abm({
         chance = 10,
         action = function(pos, node)
                 if tnt_tables[node.name]~=nil then
-                        boom_bettertnt({x=pos.x, y=pos.y, z=pos.z}, 0)
+                        boom_miningtnt({x=pos.x, y=pos.y, z=pos.z}, 0)
                 else
                         burn(pos)
                 end
@@ -328,7 +405,7 @@ minetest.register_abm({
         chance = 10,
         action = function(pos, node)
                 if tnt_tables[node.name]~=nil then
-                        boom_bettertnt({x=pos.x, y=pos.y, z=pos.z}, 0)
+                        boom_miningtnt({x=pos.x, y=pos.y, z=pos.z}, 0)
                 else
                         burn(pos)
                 end
@@ -336,9 +413,9 @@ minetest.register_abm({
 })
 
 minetest.register_craft({
-        output = "bettertnt:gunpowder",
+        output = "miningtnt:gunpowder",
         type = "shapeless",
-        recipe = {"default:coal_lump", "default:gravel", "default:dirt"}
+        recipe = {"default:coal_lump", "default:gravel", "default:pick_stone"}
 })
 
 

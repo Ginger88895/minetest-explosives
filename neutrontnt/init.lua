@@ -42,7 +42,7 @@ local function combine_texture(texture_size, frame_count, texture, ani_texture)
         return ani_texture.."^[combine:"..texture_size.."x"..texture_size*frame_count..":"..combine_textures.."^"..ani_texture
 end
 
-local animated_tnt_texture = combine_texture(16, 4, "default_tnt_top.png", "neutrontnt_top_burning_animated.png")
+local animated_tnt_texture = combine_texture(16, 4, "tnt_top.png", "neutrontnt_top_burning_animated.png")
 	
 tnt_c_tnt = {}
 tnt_c_tnt_burning = {}
@@ -54,7 +54,7 @@ for name,data in pairs(tnt_tables) do
 
 	minetest.register_node(name, {
 		description = "TNT ("..name..")",
-		tiles = {"default_tnt_top.png", "default_tnt_bottom.png", "default_tnt_side.png"},
+		tiles = {"tnt_top.png", "tnt_bottom.png", "tnt_side.png"},
 		groups = {dig_immediate=2, mesecon=2},
 		sounds = default.node_sound_wood_defaults(),
 		
@@ -82,7 +82,7 @@ for name,data in pairs(tnt_tables) do
 	
 	minetest.register_node(name.."_burning", {
 	        tiles = {{name=animated_tnt_texture, animation={type="vertical_frames", aspect_w=16, aspect_h=16, length=1}},
-	        "default_tnt_bottom.png", "default_tnt_side.png"},
+	        "tnt_bottom.png", "tnt_side.png"},
 	        light_source = 5,
 	        drop = "",
 	        sounds = default.node_sound_wood_defaults(),
